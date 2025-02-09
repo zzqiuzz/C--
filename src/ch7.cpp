@@ -4,6 +4,7 @@ using namespace std;
 /*1.初始化变量以及以值的方式传递或者返回一个对象，执行拷贝操作；
   2.定义在类内部的函数是自动inline的;
   3.mutable 关键字成员变量，即使在const对象内，也可以修改；
+  4.如果成员是const、引用或者某种未提供默认构造函数的类类型，必须通过构造函数初始值列表为这些成员提供初始值；
 */
 class Test{
     int number = 0;
@@ -54,6 +55,21 @@ Test* return_p(){
     return tmp;
 }
 
+class Y;  // 一定要有这句话 要声明
+class X{
+    public:
+        X() = default; 
+        Y* y = nullptr;
+        int num_x = 1;
+};
+
+class Y{
+    public:
+        Y() = default;
+        Y(int num) : num_y(num) {}; 
+        X x = {};
+        int num_y = 2;
+};
 
 int main(){
     {
@@ -89,7 +105,17 @@ int main(){
         // Test* tmp = return_p();
         // cout << tmp->print_name() << endl;jdsaA
         // tmp->print_number();
-
     }
+    {//  定义一对类X和Y,X包含一个指向Y的指针， Y包含一个类型为X的对象
+        X x;
+        Y y = {100};
+        x.y = &y;
+        std::cout << "-------------------" << x.y->num_y << std::endl; 
+    }
+
+
+
+
+
     return 0;
 }
