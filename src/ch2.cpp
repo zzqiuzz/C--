@@ -5,16 +5,38 @@
 
 #include <iostream>
 #include <string>
+#include <string.h>
 std::string outer_str; // 未显示初始化，函数外定义则默认初始化为空串
 int outer_varibale; // 未显示初始化，函数外定义则默认初始化为0
 int block_scope_var = 2;
 
+// 定义函数指针类型 指向函数的指针，函数接受 int 参数并返回 int
+typedef int (*FuncPtr)(int, int);
+typedef FuncPtr (*FType)(int); 
+ 
 constexpr int constexpr_int = 1;
 
 int static_(){
     static int count = -1;
     count ++;
     return count;
+}
+
+int add (int x, int y){
+    return x + y;
+};
+
+int multiply(int x, int y) {
+    return x * y;
+}
+
+// 示例函数，返回一个函数指针
+FuncPtr get_function(int op) {
+    if (op == 1) {
+        return add;
+    } else {
+        return multiply;
+    }
 }
 
 int main(){
@@ -119,6 +141,42 @@ int main(){
             std::cout << static_() << " " << std::endl;
 
         }
+    }
+
+    {
+        char a[20] = "hello world", tmp;
+        char *start, *end;
+        start = end = a;
+        end += strlen(a) - 1;
+        std::cout << *start << " " << *start++ << std::endl; // h h
+        std::cout << "0------------------" << *start << std::endl; // e
+        std::cout << *end << " " << *end-- << std::endl; // d d
+        std::cout << "1------------------" << *end << std::endl; //l
+        while(start < end){
+            tmp = *start;
+            *start++ = *end;
+            *end-- = tmp;
+        }
+        std::cout << a << std::endl;
+
+    }
+
+    { // C/C++ 的声明遵循“螺旋法则”（Spiral Rule），即从变量名开始，按照优先级向内解析。
+        /* 
+            1. f 是一个指针，指向某种类型的对象。
+            2. *f 表示 f 是一个指针，指向一个函数。这个函数有两个参数，类型分别为 int 和 int，并且返回值是一个指针。 
+            3. 返回值是一个指针，指向一个函数。这个函数有一个 int 类型的参数，并返回一个 int 类型的值。
+        */
+        // take an example 
+        
+        FType f = get_function;
+
+        // 使用 f
+        FuncPtr func = f(1); // 获取 add 函数
+        printf("Result: %d\n", func(3, 4)); // 输出 7
+
+        FuncPtr func1 = f(2); // 获取 add 函数
+        printf("Result: %d\n", func1(3, 4)); // 输出 7 
     }
 
 
