@@ -37,10 +37,12 @@ int main()
             {5, 6, 7, 8},
             {9, 10, 11, 12}
         };
-    
+        /*一维数组作为函数的参数时，数组名就转换为数组首元素的地址。二维数组作为函数的参数时，数组名同样转换为数组首元素的地址&arr[0],
+        只不过这个首元素是一个int[5]类型的数组*/
         // 定义一个指向一维数组的指针
         int (*ptr)[4] = arr; // 指向包含 4 个元素的一维数组 ptr = &arr[0] ptr存放的是数组第一个元素(也即arr[0])的首地址 所以ptr+1 代表arr[1]的地址 而arr[1]又是第二行的首地址，arr[1] = &arr[1][0], 所以*(ptr+1) = *arr[1] 的是arr[1][0]地址
-        std::cout << ptr << " " <<  arr  << " " << arr[0] <<  " " << arr+1 << " " << *(arr + 1) << " " << arr[1] << std::endl;
+        std::cout << ptr << " " <<  arr  << " " << arr[0] <<  " " << arr+1 << " " << *(arr + 1) << " " << arr[1] << " " << arr[1]+1 << std::endl;
+        std::cout << arr+1 << " " <<  &arr[1]  << " " << &arr[1][0] <<  " " << *(arr+1) << std::endl; // the same
         // 使用索引访问二维数组元素
         std::cout << "二维数组内容: " << std::endl;
         for (int i = 0; i < 3; ++i) {
@@ -51,6 +53,33 @@ int main()
         }
 
     }
+
+    {
+        // const char *a[5] = {"nihao", "hhh"}; // a是一个char指针数组，每个元素都是指针，因此需要二级指针指向a;
+        // char **p = a;
+        // int b = 5;
+        // int const *pi = &b; // 不是常量指针，可以通过p来修改b的值
+        // const int *p = &b; // 不是常量指针，可以通过p来修改b的值
+        // int * const pp = &b; // pp 是常量指针，不能修改，只能指向b
+    }
+    int a = 0;
+    {
+        static int a = 10; // 这个静态变量仅在这个代码段内可见
+        std::cout << a << std::endl; // 10
+    }
+    std::cout << a << std::endl; // 0
+
+
+    {
+        int a0 = 0; 
+        int a1 = 1; 
+        int *a = &a0, *b = &a1;
+        int *p[2] = {a, b};
+        int **pp = p;
+        cout << " " << pp[0] << " " << pp[1] << endl;
+        cout << " " << *pp[0] << " " << *pp[1] << endl;
+    }
+
     return 0;
 }
 

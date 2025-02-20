@@ -6,14 +6,19 @@
 #include <iostream>
 #include <string>
 #include <string.h>
-std::string outer_str; // 未显示初始化，函数外定义则默认初始化为空串
-int outer_varibale; // 未显示初始化，函数外定义则默认初始化为0
+using std::cout;
+using std::endl;
+std::string outer_str; // 未显式初始化，函数外定义则默认初始化为空串
+int outer_varibale; // 未显式初始化，函数外定义则默认初始化为0
 int block_scope_var = 2;
+
+#define _CAT(A, B) A##B // ## 操作符将两个参数 A 和 B 连接在一起
+
 
 // 定义函数指针类型 指向函数的指针，函数接受 int 参数并返回 int
 typedef int (*FuncPtr)(int, int);
 typedef FuncPtr (*FType)(int); 
- 
+// (*(void(*)())0)(); 这是啥意思
 constexpr int constexpr_int = 1;
 
 int static_(){
@@ -40,14 +45,20 @@ FuncPtr get_function(int op) {
 }
 
 int main(){
-    unsigned char a = -1;  //  无符号超出范围 255
-    // signed char b = 256; // 有符号超出范围 undefined value warning overflow 可能正常运行，崩溃，产生垃圾数据
-    int month = 9;
-    int mont = 017; // octal number 八进制 
-    // int aa = {3.14}; {}初始化,只要存在信息丢失的风险，编译器报错。
-    int inner_var; // 函数内部声明而没有初始化，则值由定义的位置所决定（不确定）
-    // std::cout << outer_varibale << outer_str << inner_var;
-
+    {
+        int xy = 42;
+        int hello_world = 100; 
+        cout << _CAT(x, y) << " " << _CAT(hello, _world) << endl; // 42 100
+    } 
+    {
+        unsigned char a = -1;  //  无符号超出范围 255
+        // signed char b = 256; // 有符号超出范围 undefined value warning overflow 可能正常运行，崩溃，产生垃圾数据
+        int month = 9;
+        int mont = 017; // octal number 八进制 
+        // int aa = {3.14}; {}初始化,只要存在信息丢失的风险，编译器报错。
+        int inner_var; // 函数内部声明而没有初始化，则值由定义的位置所决定（不确定）
+        // std::cout << outer_varibale << outer_str << inner_var;
+    }
     // scope
     {
         int block_scope_var = 1; // 覆盖全局作用域变量 可以通过 ::block_scope_var 来访问全局作用域里的变量
