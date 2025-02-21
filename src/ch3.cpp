@@ -1,13 +1,29 @@
-#include <iostream>
-using namespace std;
+#include <iostream> 
 #include <string>
-
+#define Qnew(T) (new T) 
+using std::string;
+using std::cout;
+using std::endl;
 int &get(int* array, int index){
     return array[index];
 }
 
 int main()
 {
+    {// initialize string
+     //Notice: sizeof(std::string) 返回的是 std::string 对象本身的大小，而不是它所管理的字符串数据的大小。
+        string s1; // default init, empty str.
+        string s2 = s1; // s2 copy from s1
+        string s3 = "hiyao"; // s3 is a copy of string literal "hiya"  拷贝初始化
+        string s5("hiyao"); // 直接初始化
+        string s4(10, 'c'); // ccccccccccc 直接初始化
+        const char* c = "hiya";
+        const char c_ar[] = "hiya";
+        cout << sizeof(s3) << " " << sizeof(c) << " " << sizeof(c_ar) << endl; // 32 8 5
+        bool a = s3.size() < -1; // True size()返回的是无符号std::size_type 与-1比较 -1会变成一个很大的数
+        cout << a << " " << s3.size() << endl;
+    }
+
     //array
     {
         int a[10] = {0};

@@ -20,11 +20,26 @@ typedef int (*FuncPtr)(int, int);
 typedef FuncPtr (*FType)(int); 
 // (*(void(*)())0)(); 这是啥意思
 constexpr int constexpr_int = 1;
-
+constexpr unsigned long long fibonacci(int i) {
+    switch (i) {
+        case 0:
+            return 0;
+        case 1:
+            return 1;
+        default:
+            return fibonacci(i - 1) + fibonacci(i - 2);
+    }
+}
 int static_(){
     static int count = -1;
     count ++;
     return count;
+}
+
+static int func(int param) { //  声明是静态函数，该函数仅在该文件可见
+    static int static_ = param; // param仅在第一次初始化static_有效，后续都无效
+    // std::cout << "static_ = " << static_ << std::endl;
+    return static_++; // 先返回static_ ,后++
 }
 
 int add (int x, int y){
@@ -63,34 +78,40 @@ int main(){
     {
         int block_scope_var = 1; // 覆盖全局作用域变量 可以通过 ::block_scope_var 来访问全局作用域里的变量
         int block_scope_var1 = 1; // 块作用域，出了此作用域即失效，无法访问
-
-
-    } 
-    int i = 100, sum = 0;
-    for(int i = 0; i != 10; ++i)
-        sum += i ; //运算完后 for里面的i出作用域失效
-    // std::cout << i << ", " << sum; // i = 100, sum = 45
-
-    //reference must initilize being declared, only once. binded only by just one var.
-    int ii , &ri = ii;
-    ii = 5;
-    ri = 10;
-    // std::cout << ii << " " << ri << std::endl; // 10 10 
-
-    //pointer
-    int* p, p1; // p is a pointer while p1 is var of type int.
-    double dval = 0.2;
-    double* pd = &dval; // declare a pointer which represents the addr of a var.
-    double* pd2 = pd; // both addr.
-    double* &rr = pd; // reference that refers to a pointer.
-    void* pp = &dval;
-    double* ppp = static_cast<double*>(pp);
-    std::cout << pd << " " << pd2 << *rr << std::endl;
-
+        int i = 100, sum = 0;
+        for(int i = 0; i != 10; ++i)
+            sum += i ; //运算完后 for里面的i出作用域失效
+        // std::cout << i << ", " << sum; // i = 100, sum = 45
+    }
+    {
+        //reference must initilize being declared, only once. binded only by just one var.
+        int ii , &ri = ii;
+        ii = 5;
+        ri = 10;
+        // std::cout << ii << " " << ri << std::endl; // 10 10 
+    }
+    {
+        //pointer
+        int* p, p1; // p is a pointer while p1 is var of type int.
+        double dval = 0.2;
+        double* pd = &dval; // declare a pointer which represents the addr of a var.
+        double* pd2 = pd; // both addr.
+        double* &rr = pd; // reference that refers to a pointer.
+        void* pp = &dval;
+        double* ppp = static_cast<double*>(pp);
+        std::cout << pd << " " << pd2 << *rr << std::endl;
+    }
     //constexpr
-    constexpr int* constexpr_p = &block_scope_var; // 该变量必须在函数体外定义
-    // constexpr int* constexpr_p1 = &constexpr_int;  //constexpr_int是const
-    constexpr const int* constexpr_p1 = &constexpr_int;   
+    {
+        constexpr int num = 10;
+        int a[num] = {0};
+        constexpr int* constexpr_p = &block_scope_var; // 该变量必须在函数体外定义
+        // constexpr int* constexpr_p1 = &constexpr_int;  //constexpr_int是const
+        constexpr const int* constexpr_p1 = &constexpr_int;   
+        // 编译期间算出这个结果了
+        // constexpr auto FIB90 = fibonacci(90); // exceed recursion depth, you can relax returned type from costexpr to non-constexpr
+        // std::cout << "fibonacci(90) = " << FIB90 << std::endl;
+    }
     
     // typedef
     {
@@ -170,9 +191,9 @@ int main(){
         }
         std::cout << a << std::endl;
 
-    }
+    } 
 
-    { // C/C++ 的声明遵循“螺旋法则”（Spiral Rule），即从变量名开始，按照优先级向内解析。
+    { // C/C++ 的声明遵循“螺旋法则”（Spiral Rule），即从变量名开始，按照优先级向内解析。 see doc/spiral_rule.md
         /* 
             1. f 是一个指针，指向某种类型的对象。
             2. *f 表示 f 是一个指针，指向一个函数。这个函数有两个参数，类型分别为 int 和 int，并且返回值是一个指针。 
