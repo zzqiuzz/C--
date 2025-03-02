@@ -5,6 +5,7 @@ using namespace std;
   2.定义在类内部的函数是自动inline的;
   3.mutable 关键字成员变量，即使在const对象内，也可以修改；
   4.如果成员是const、引用或者某种未提供默认构造函数的类类型，必须通过构造函数初始值列表为这些成员提供初始值；
+  5.常量对象以及常量对象的引用或指针都只能调用常量成员函数
 */
 class Test{
     int number = 0;
@@ -15,11 +16,11 @@ class Test{
         Test(int num, string name) : number(num), name(name){};
         ~Test(){};
         Test& add_(Test &t);
-        string print_name() const { // 常成员函数, 只能由常对象/常指针/引用来调用
+        string print_name() const { // 常成员函数, 只能由常对象/常指针/引用来调用 这里的const是修改隐式this指针的类型
             cout << "const " ;
             return name;
             };
-        string print_name() {
+        string print_name() { // 类成员函数自动inline
             cout << "no const ";
             return name;};
         void print_number(){

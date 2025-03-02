@@ -1,9 +1,11 @@
 #include <iostream> 
+#include <vector>
 #include <string>
 #define Qnew(T) (new T) 
 using std::string;
 using std::cout;
 using std::endl;
+using std::vector;
 int &get(int* array, int index){
     return array[index];
 }
@@ -19,9 +21,39 @@ int main()
         string s4(10, 'c'); // ccccccccccc 直接初始化
         const char* c = "hiya";
         const char c_ar[] = "hiya";
-        cout << sizeof(s3) << " " << sizeof(c) << " " << sizeof(c_ar) << endl; // 32 8 5
+        // cout << sizeof(s3) << " " << sizeof(c) << " " << sizeof(c_ar) << endl; // 32 8 5
         bool a = s3.size() < -1; // True size()返回的是无符号std::size_type 与-1比较 -1会变成一个很大的数
-        cout << a << " " << s3.size() << endl;
+        // cout << a << " " << s3.size() << endl; 1 5
+        int size = s4.size(); // 实际返回的类型是string::size_type
+        // cout << size << endl; // 10
+    // compare
+        string str = "Hello", phrase = "Hello World", slang = "Hiya";
+        // cout << bool(slang > phrase)  << " " << bool(phrase > str) << endl; 1 1
+        //assignment
+        string st1(10, 'c'), st2;
+        st1 = st2; // st1 被st2赋值，此时都是空字符串
+        // add
+        {
+            string s1 = "hello, ", s2 = "world\n";
+            string s3 = s1 + s2;
+            s1 += s2;
+            decltype(s1.size()) cnt = 0;
+            // string::size_type cnt = 0; the same
+            for(auto c : s1){
+                if(ispunct(c))++cnt; // 判断是否是标点符号
+            }
+            cout << cnt << endl;  // 1
+        }
+        
+    }
+    //vector 圆括号是用提供的值来构造vector对象，花括号是想用列表表达式来初始化vector对象
+    {
+        vector<int> v1(10); // 有十个元素，每个值默认初始化为0
+        vector<int> v2{10}; // 有一个元素，值是10
+        vector<int> v3(10, 1); // 有十个元素，每个值初始化为1
+        vector<int> v4{10, 1}; // 有两个元素，10和1
+        vector<int> v5 = {1,2};
+        vector<int> v6 = v3;
     }
 
     //array
