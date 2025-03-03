@@ -1,5 +1,9 @@
 /*
     C++ primer 5th edition: chapter 2 notes;
+    左值（Lvalue） ：具有持久存储位置的对象，通常可以取地址。int x = 10; // x 是左值
+    右值（Rvalue） ：临时对象或字面量，没有持久存储位置。 int y = 10 + 20; // 10 + 20 是右值
+    右值引用通过 T&& 表示，专门用于绑定到右值。例如：int&& rvalue_ref = 42; // 绑定到右值 42
+    右值引用不能绑定到左值，但可以通过 std::move 将左值转换为右值。
 */
 
 
@@ -20,7 +24,7 @@ typedef int (*FuncPtr)(int, int);
 typedef FuncPtr (*FType)(int); 
 // (*(void(*)())0)(); 这是啥意思
 constexpr int constexpr_int = 1;
-constexpr unsigned long long fibonacci(int i) {
+constexpr unsigned long long fibonacci(int i) { // 表明该函数是一个编译器期间可以算出的常量
     switch (i) {
         case 0:
             return 0;

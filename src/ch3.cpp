@@ -106,9 +106,9 @@ int main()
         // const char *a[5] = {"nihao", "hhh"}; // a是一个char指针数组，每个元素都是指针，因此需要二级指针指向a;
         // char **p = a;
         // int b = 5;
-        // int const *pi = &b; // 不是常量指针，可以通过p来修改b的值
-        // const int *p = &b; // 不是常量指针，可以通过p来修改b的值
-        // int * const pp = &b; // pp 是常量指针，不能修改，只能指向b
+        // int const *pi = &b; // 不是常量指针，不可以通过p来修改b的值
+        // const int *p = &b; // 不是常量指针，不可以通过p来修改b的值  首先看p，就近原则， 左边是一个*,说明是一个指针，这个指针指向一个const int
+        // int * const pp = &b; // pp 是常量指针，只能指向b, 但是可以修改b的值
     }
     int a = 0;
     {

@@ -27,8 +27,10 @@ int main(){
         std::cout << elem << " ";
     }
 
-    //vector
-    
+    //vector 是模板
+    {
+        
+    }
     //map
 
     //pair
