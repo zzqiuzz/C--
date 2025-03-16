@@ -11,7 +11,7 @@ int &get(int* array, int index){
 }
 
 int main()
-{
+{ 
     {// initialize string
      //Notice: sizeof(std::string) 返回的是 std::string 对象本身的大小，而不是它所管理的字符串数据的大小。
         string s1; // default init, empty str.
@@ -24,7 +24,7 @@ int main()
         // cout << sizeof(s3) << " " << sizeof(c) << " " << sizeof(c_ar) << endl; // 32 8 5
         bool a = s3.size() < -1; // True size()返回的是无符号std::size_type 与-1比较 -1会变成一个很大的数
         // cout << a << " " << s3.size() << endl; 1 5
-        int size = s4.size(); // 实际返回的类型是string::size_type
+        int size = s4.size(); // 实际返回的类型是string::size_type, 无符号，可以放下任何string对象的大小
         // cout << size << endl; // 10
     // compare
         string str = "Hello", phrase = "Hello World", slang = "Hiya";
@@ -44,18 +44,53 @@ int main()
             }
             cout << cnt << endl;  // 1
         }
+        {
+            string hh = "nishishei?";
+            for(char &c : hh){ // 这里必须是引用!!!! 或者用auto也行 string里每一个字符都是char类型
+                c = 'X';
+            }
+            cout << hh;
+        }
         
     }
     //vector 圆括号是用提供的值来构造vector对象，花括号是想用列表表达式来初始化vector对象
     {
+        // 创建指定数量的元素
         vector<int> v1(10); // 有十个元素，每个值默认初始化为0
-        vector<int> v2{10}; // 有一个元素，值是10
         vector<int> v3(10, 1); // 有十个元素，每个值初始化为1
+        // 列表初始化
+        vector<int> v2{10}; // 有一个元素，值是10
         vector<int> v4{10, 1}; // 有两个元素，10和1
-        vector<int> v5 = {1,2};
+        vector<int> v5 = {1,2}; // 只有花括号里的值必须与元素类型相同才能执行列表初始化
+        vector<string> s{10}; // 这里花括号里的10不是string类型，编译器使用默认值初始化对象，初始化成10个元素
         vector<int> v6 = v3;
+        vector<vector<int>> matrix(3, vector<int>(5, 0));//声明一个三行五列的matrix
     }
 
+    {//使用迭代器实现二分查找
+        vector<int> num{1,3, 4, 5, 6, 7, 8, 9};
+        for(vector<int>::iterator it = num.begin(); it != num.end(); it++)
+            cout << *it << " ";
+        int target_num = 3;
+        auto start = num.begin(), end = num.end(); // 这里的end指向尾元素的下一位置 
+        cout << (start < end) << endl;
+        vector<int>::iterator mid = start + (end - start) / 2;
+        while(start < end){
+            cout << " mid num is  " << *mid << endl;
+            if(*mid == target_num){
+                cout << "find! " << *mid << endl;
+                break;
+            }
+            else if(*mid < target_num){
+                start = mid + 1;
+            }
+            else{
+                end = mid - 1;
+            }
+            mid = start + (end - start) / 2;
+        }
+
+    }
     //array
     {
         int a[10] = {0};
