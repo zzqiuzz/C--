@@ -10,6 +10,21 @@ int &get(int* array, int index){
     return array[index];
 }
 
+void print_array(int *array, int size){
+    cout << "--------------------print array case 1--------------------" << endl;
+    for(int i = 0; i < size; i++)
+        cout << array[i] << ",";
+    cout << endl;
+}
+
+void print_array_(int (*array)[10], int size){
+    cout << "--------------------print array case 2--------------------" << endl;
+    for(int i = 0; i < size; i++)
+        cout << (*array)[i] << ",";
+    cout << endl;
+}
+
+
 int main()
 { 
     {// initialize string
@@ -91,19 +106,26 @@ int main()
         }
 
     }
-    //array
+    //1-d array https://blog.csdn.net/zzy979481894/article/details/124678972
     { 
-        int a[10] = {0};
+        int a[10] = {1, 2 ,3,4,5,6}; // 后续未显式初始化的元素默认初始化为0
+        // 用指针指向
+        // 方法一 指向数组的指针 多用来二维数组
+        int (*p_a)[10] = &a; // p_a 是一个指向a这个数组的指针
+        print_array((int*)p_a, 5); // 必须要执行转换
+        print_array_(p_a, 5);  
+        // 方法二 推荐 指向数组元素的指针
+        int *b = a; // b 是指向数组a的指针，a是一个一级指针，指向a[0], 即b也指向a[0], b = &a[0]
+        print_array(b, 5); 
+
         int *p[10]; // 存放10个int类型指针数组
-        // int &p[10] = ; 不存在引用的数组, 数组要求元素是对象，而引用不是对象
-        int (*b)[10] = &a; // b 指向一个含有10个元素的数组 a 为什么不能用int *b = &a; 因为 int *b是指向一个整数啊，很显然啊
-        int (&ref)[10] = a;// ref引用一个含有10个元素的数组 a 
-        std::cout << a << " " << &a << " " << b <<std::endl;
-        int aa[8-6] = {0}; //正确
+        // int &p[10]; 不存在引用的数组, 数组要求元素是对象，而引用不是对象
+        int (&ref)[10] = a;// ref引用一个含有10个元素的数组 a  
+        int aa[8-6] = {0}; //正确 数组里面的维度必须是常量或者是常量表达式
         auto c(a); // c这里是一个int* 相当于c(&a[0])                
         decltype(a) d = {4,5,6,7,8,} ;//这里d是一个含有10个整型的数组 注意与auto区别
         d[5] = 5;
-        int *p = &d[2]; // 6
+        int *pp = &d[2]; // 6
         // p[1]即7  p[-2]即4
     }
     {
@@ -119,7 +141,8 @@ int main()
         // std::cout << *pp << p << &a << std::endl; 他仨一样的
     }
         std::cout << "----------------------1------------------" << std::endl;
-    {//多维数组其实就是数组的数组，即数组中的每个元素也是数组
+    {   // 2d array
+        //多维数组其实就是数组的数组，即数组中的每个元素也是数组
         int arr[3][4] = { // {0, 1,2，3} 也可以只塞满了第一行，剩下的默认初始化为0
             {1, 2, 3, 4},
             {5, 6, 7, 8},
@@ -134,18 +157,10 @@ int main()
         // 使用索引访问二维数组元素
         std::cout << "二维数组内容: " << std::endl;
         /*
-            ptr是一个指向含有四个整数的指针，被赋值为arr，而arr是一个3行4列的二维数组，所以ptr指向的是arr第一行的首元素的地址
-            此时ptr+i存放的是arr第i行的数组首元素的地址即*(ptr+i),那么显然，*(ptr+i)+j则指向第i行的第j个元素的地址 
-            假如arr的元素地址如下:
-            0x000, 0x004, 0x008, 0x00C,
-            0x010, 0x014, 0x018, 0x01C,  
-            ...
-            ptr是一个地址是一个地址是一个地址是一个地址是一个地址是一个地址是一个地址是一个地址
-            e.g ptr的地址是 
-            0x200[存放的是0x000即arr的首元素的地址]， 
-            0x204[存放的是0x010即arr第二元素的地址]，
-            0x208[存放的是0x020即arr第三元素的地址]，
-            所以ptr+1即0x204   *(ptr+1)是0x010 *(ptr+1) +2 即0x018 懂了吗!!!! niubility
+            arr二维数组看成有三个元素的数组分别是 arr[0] arr[1] arr[2] 每个元素又都是一个四维数组 arr[0] 是arr[0][0] arr[0][1] arr[0][2] arr[0][3] 这个数组的首元素地址
+            这个时候arr+1 指向arr[1] 即 ptr+1 = &arr[1] 
+            那么*(arr+1)代表的是arr[1] 这个元素(行)的首地址，那么*(arr+1) + 1就是这一行当中的第二个元素的地址，那么*(*(arr+1) + 1)就是取元素
+            int (*ptr)[4] = arr; 这个声明，意思是ptr这个指针指向的是arr这个包含三个元素arr[0] arr[1] arr[2] 中arr[0]这个首元素，即ptr = &arr[0]
         */
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 4; ++j) {
