@@ -1,9 +1,12 @@
 #include<stdlib.h>
 #include <stdio.h>
+#include <iostream>
+#include<string>
+using namespace std;
 int main(void){
-    char a[10] = "nishishei";
-    printf("------sizeof:%ld", sizeof(a));
-    for()
+    string my_name("zhengzhe");
+    string name = "zhengzhe";
+    cout << my_name << " " << name;
 
     return 0;
 }

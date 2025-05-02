@@ -26,22 +26,23 @@ void print_array_(int (*array)[10], int size){
 
 
 int main()
-{ 
-    {// initialize string
-     //Notice: sizeof(std::string) 返回的是 std::string 对象本身的大小，而不是它所管理的字符串数据的大小。
+{   
+    // 0. string
+    { 
+        //Notice: sizeof(std::string) 返回的是 std::string 对象本身的大小，而不是它所管理的字符串数据的大小。
         string s1; // default init, empty str.
-        string s2 = s1; // s2 copy from s1
-        string s3 = "hiyao"; // s3 is a copy of string literal "hiya"  拷贝初始化
+        string s2 = s1; // 拷贝初始化
+        string s3 = "hiyao"; // 拷贝初始化
         string s5("hiyao"); // 直接初始化
-        string s4(10, 'c'); // ccccccccccc 直接初始化
-        const char* c = "hiya";
-        const char c_ar[] = "hiya";
+        string s4(10, 'c'); //  直接初始化 十个元素 'c' 
+
         // cout << sizeof(s3) << " " << sizeof(c) << " " << sizeof(c_ar) << endl; // 32 8 5
         bool a = s3.size() < -1; // True size()返回的是无符号std::size_type 与-1比较 -1会变成一个很大的数
         // cout << a << " " << s3.size() << endl; 1 5
         int size = s4.size(); // 实际返回的类型是string::size_type, 无符号，可以放下任何string对象的大小
         // cout << size << endl; // 10
-    // compare
+
+        // compare
         string str = "Hello", phrase = "Hello World", slang = "Hiya";
         // cout << bool(slang > phrase)  << " " << bool(phrase > str) << endl; 1 1
         //assignment
@@ -52,6 +53,8 @@ int main()
             string s1 = "hello, ", s2 = "world\n";
             string s3 = s1 + s2;
             s1 += s2;
+            string s4 = "hello" + string("how are you"); // 必须要有一个是string
+            // string s4 = "hello" + "how are you"; // 两个字符串字面值不能直接相加
             decltype(s1.size()) cnt = 0;
             // string::size_type cnt = 0; the same
             for(auto c : s1){
@@ -64,10 +67,19 @@ int main()
             for(char &c : hh){ // 这里必须是引用!!!! 或者用auto也行 string里每一个字符都是char类型
                 c = 'X';
             }
-            cout << hh;
+            cout << hh << endl;
         }
-        
+        const char* c = "hiya"; //
+        const char c_ar[] = "hiya";
+        printf("----------%ld\n", sizeof(c_ar)); // 5
+        printf("----------%ld\n", sizeof(c)); // 5
+        for(int i = 0; i < sizeof(c); i++){
+            cout << c[i];
+        }
     }
+
+
+    // 1. vector
     //vector 圆括号是用提供的值来构造vector对象，花括号是想用列表表达式来初始化vector对象
     {
         // 创建指定数量的元素
@@ -160,7 +172,7 @@ int main()
             arr二维数组看成有三个元素的数组分别是 arr[0] arr[1] arr[2] 每个元素又都是一个四维数组 arr[0] 是arr[0][0] arr[0][1] arr[0][2] arr[0][3] 这个数组的首元素地址
             这个时候arr+1 指向arr[1] 即 ptr+1 = &arr[1] 
             那么*(arr+1)代表的是arr[1] 这个元素(行)的首地址，那么*(arr+1) + 1就是这一行当中的第二个元素的地址，那么*(*(arr+1) + 1)就是取元素
-            int (*ptr)[4] = arr; 这个声明，意思是ptr这个指针指向的是arr这个包含三个元素arr[0] arr[1] arr[2] 中arr[0]这个首元素，即ptr = &arr[0]
+            int (*ptr)[4] = arr; 这个声明，意思是ptr这个指针指向的是arr这个包含三个元素arr[0] arr[1] arr[2] 中arr[0]这个首元素，即ptr = &arr[0](arr = &arr[0])
         */
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 4; ++j) {
