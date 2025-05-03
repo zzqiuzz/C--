@@ -3,7 +3,7 @@
 #include <iostream>
 #include<string>
 using namespace std;
-int main(void){
+int main(int argc, char *argv[]){
     string my_name("zhengzhe");
     string name = "zhengzhe";
     cout << my_name << " " << name;

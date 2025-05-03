@@ -62,8 +62,14 @@ FuncPtr get_function(int op) {
         return multiply;
     }
 }
+// argc 表示命令行参数的数量，argv是一个指向字符数组的指针数组，每个元素指向一个命令行参数字符串
+int main(int argc, char *argv[]){
+    // argc argv
+    cout << "number of args is: " << argc << endl;
+    for(int i = 0; i < argc; i++){
+        cout << "argv[" << i << "] = " << argv[i] << endl;
+    }
 
-int main(){
     {
         int xy = 42;
         int hello_world = 100; 
