@@ -7,7 +7,7 @@ using namespace std;
   4.如果成员是const、引用或者某种未提供默认构造函数的类类型，必须通过构造函数初始值列表为这些成员提供初始值；
   5.常量对象以及常量对象的引用或指针都只能调用常量成员函数
 */
-// 声明之后，定义之前是一个不完全里类型，只知道它是一个类类型，但是不清楚它包含哪些成员
+// 声明之后，定义之前是一个不完全类型，只知道它是一个类类型，但是不清楚它包含哪些成员
 // 只能在有限的情况下使用，可以定义指向这种类型的指针或引用
 class Screen; 
 
@@ -48,7 +48,7 @@ class Test{
             cout << "no const ";
             return name;};
         void print_number(){
-            cout << "numnber is " << this->number << endl;
+            cout << "number is " << this->number << endl;
         } 
         static int get_hh(); // 只能访问静态成员变量，因为没有this指针，所以不能访问其它成员变量
 
@@ -58,7 +58,8 @@ int Test::get_hh(){return hh;};
 Test add_obj(const Test &t1, const Test& t2){
     Test tmp;
     tmp.number = t1.number + t2.number;
-    return tmp;
+    printf("----------------tmp addr%p", &tmp);
+    return tmp; // 返回tmp这个对象执行拷贝操作后被释放
 }
 
 Test& Test::add_(Test &t){
@@ -107,10 +108,12 @@ int main(){
     {
         //隐式转换；
         Test t = 250;
+        Test t1 = {23, "zz"};
         Test tt = t;
         string name = "nihao";
+        Test t2(name);
         // Test t_ = name; // 失败，因为禁用了隐式初始化，必须显式构造
-        Test t_ = static_cast<Test>(name); // 这里用static_cast显示转换成了Test对象
+        Test t_ = static_cast<Test>(name); // 这里用static_cast显式转换成了Test对象
         add_obj(2, 3); // 这里编译器将2， 3 隐式转换成了Test临时对象 这种显然会造成困扰
     }
     {
@@ -131,6 +134,7 @@ int main(){
         Test t = {111, "t"};
         Test ttt, t1 = {222, "t1"};
         ttt = add_obj(t, t1);
+        printf("----------------ttt addr%p\n", &ttt);
         ttt.print_number();
 
         // OK
