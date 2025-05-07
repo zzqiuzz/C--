@@ -30,12 +30,16 @@ class Test{
     static constexpr int v = 1;
     // static  int value = 0; // 不可以初始化
     static int hh; // 类外初始化
-    int number = 0;
+    int number = 0; // 初始化的时候按照顺序来
     string name = "";
+
+    friend void printTestName(Test); // 声明友元函数
     public:
         friend Test add_obj(const Test&, const Test&); // 友元函数可以访问类的私有成员
         Test() = default;
-        Test(int num, string name) : number(num), name(name){};
+        Test(int num, string name) : number(num){
+            this->name = name; // this是一个const指针，用于指向具体的实例对象，不能在静态成员函数中使用，因为静态成员函数不绑定任何实例对象
+        };
         Test(int num) : number(num){}; // 接受单个参数的构造函数，编译器可以执行隐式转换；
         explicit Test(string n) : name(n){}; // 禁用隐式转换，必须显式构造, 只对一个实参的构造函数有效 多个参数的构造函数不能用隐式转换
         ~Test(){};
@@ -51,8 +55,18 @@ class Test{
             cout << "number is " << this->number << endl;
         } 
         static int get_hh(); // 只能访问静态成员变量，因为没有this指针，所以不能访问其它成员变量
-
+        Test& add(int);
 };
+
+void printTestName(Test t){
+    cout << "-----visit Test private member by friend, the name is: " << t.name;// 因为是友元可以访问Test成员
+}
+
+Test& Test::add(int num){
+    this->number += num;
+    return *this; // for method chaining e.g Test a.add(1).add(5)
+}
+
 int Test::hh = 5; // 初始化静态成员变量 
 int Test::get_hh(){return hh;};
 Test add_obj(const Test &t1, const Test& t2){
