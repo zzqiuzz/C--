@@ -115,9 +115,10 @@ int main(int argc, char *argv[]){
     {
         constexpr int num = 10;
         int a[num] = {0};
-        constexpr int* constexpr_p = &block_scope_var; // 该变量必须在函数体外定义
+        constexpr int* constexpr_p = &block_scope_var; // 该变量必须在函数体外定义(不能是局部变量)，constexpr_p是常量指针，不能改变指向
+        // constexpr_p = nullptr; // error constexpr_p是常量指
         // constexpr int* constexpr_p1 = &constexpr_int;  //constexpr_int是const
-        constexpr const int* constexpr_p1 = &constexpr_int;   
+        constexpr const int* constexpr_p1 = &constexpr_int; //constexpr_p1是指向常量的常量指针 == const int * const p  
         // 编译期间算出这个结果了
         // constexpr auto FIB90 = fibonacci(90); // exceed recursion depth, you can relax returned type from costexpr to non-constexpr
         // std::cout << "fibonacci(90) = " << FIB90 << std::endl;

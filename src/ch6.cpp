@@ -110,7 +110,11 @@ int main()
             std::cout << arr[i] << " "; // 输出数组内容
         }
     }
-
+    std::cout << "----------------------4------------------" << std::endl;
+    {
+        static int i; // 局部的static变量初始化为0
+        std::cout << "initialize local static varible as: " << i << std::endl;
+    }
 
 
     return 0;

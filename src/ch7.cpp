@@ -1,4 +1,5 @@
 #include<string>
+#include<vector>
 #include<iostream>
 using namespace std;
 /*1.初始化变量以及以值的方式传递或者返回一个对象，执行拷贝操作；
@@ -14,8 +15,28 @@ class Screen;
 class Link_screen{
     Screen *window;
     // Screen hh; 错误 上述不完全类型 只能定义指向这种类型的指针或引用
-    Link_screen *next;
+    Link_screen *next; // 指针或者引用可以这样定义，可以是不完全类型
     Link_screen *prev;
+    static Link_screen l; // 静态成员也可以是不完全类型
+    // Link_screen r; error 常规对象不能是不完全类型
+};
+
+class NoDefault{
+    int number = 0;
+    public:
+        // NoDefault(){} = default;
+        NoDefault(int num): number(num){};//由于你自己定义了一个构造函数（B(int)），编译器不会再生成默认构造函数 。
+                                       //如果你仍然想要支持 B b; 这样的调用，你需要显式定义默认构造函数或使用 = default。
+        void print(){cout << number << std::endl;}
+};
+
+class C{
+    public:
+        NoDefault nodefault_obj;
+        C(): nodefault_obj(0){};  // 必须对成员nodefault_obj初始化，该成员无默认构造函数
+        void print(){
+            nodefault_obj.print() ;
+        };      
 };
 /*
 explicit 关键字用于防止隐式类型转换。
@@ -26,21 +47,28 @@ explicit 关键字用于防止隐式类型转换。
 类的静态成员函数不能被声明为const的原因（标准规定）：因为const是修饰成员函数，要求有this指针，而静态成员函数没有this指针，
 */
 class Test{
+    // 静态成员属于类，不属于任何一个对象，并不是在创建类的对象时被定义的，一般来说不能在类的内部初始化的，只能定义一次
+    // 但是可以进行const整数里类型的类内初始化
     static const int value = 0; // 可以初始化
-    static constexpr int v = 1;
-    // static  int value = 0; // 不可以初始化
+    // static double rate = 1.0; error 
+    // static const double r = 2.0; // error
+    static constexpr double r = 2.0; // duoble只能用constexpr 
+
+    // static  int value = 0; // 不可以初始化 必须是const或者constexpr
     static int hh; // 类外初始化
     int number = 0; // 初始化的时候按照顺序来
     string name = "";
 
     friend void printTestName(Test); // 声明友元函数
     public:
+    
+        static constexpr int v = 1; 
         friend Test add_obj(const Test&, const Test&); // 友元函数可以访问类的私有成员
         Test() = default;
         Test(int num, string name) : number(num){
             this->name = name; // this是一个const指针，用于指向具体的实例对象，不能在静态成员函数中使用，因为静态成员函数不绑定任何实例对象
         };
-        Test(int num) : number(num){}; // 接受单个参数的构造函数，编译器可以执行隐式转换；
+        Test(int num) : number(num){}; // 接受单个参数的构造函数，编译器可以执行隐式转换
         explicit Test(string n) : name(n){}; // 禁用隐式转换，必须显式构造, 只对一个实参的构造函数有效 多个参数的构造函数不能用隐式转换
         ~Test(){};
         Test& add_(Test &t);
@@ -112,21 +140,30 @@ class Y{
         X x = {};
         int num_y = 2;
 };
-
 int main(){
     {
-        Test t = 123; // 
-        cout << "------------------" << t.get_hh();
-        // << " " << Test::hh; 无法直接访问 因为是private
+        // NoDefault nodefault; // 无默认构造函数，初始化失败
+        // std::vector<NoDefault> vec(10); // 无默认构造函数，初始化失败
+        std::vector<C> vec(10); // 合法
+        C c;
+        c.print();
+
     }
     {
-        //隐式转换；
+        Test t = 123; // 
+        cout << "---------static---------" << t.get_hh() << endl; // 常规对象访问静态成员
+        cout << "---------static---------" << Test::get_hh() << endl; 
+        // << " " << Test::hh; 无法直接访问 因为是private
+        // const int &num = Test::v; // 这里会报错 undefined reference to Test::v 找不到定义， 因为是在类中定义
+    }
+    {
+        // 当构造函数接受一个参数的时候，允许隐式转换
         Test t = 250;
         Test t1 = {23, "zz"};
         Test tt = t;
         string name = "nihao";
-        Test t2(name);
-        // Test t_ = name; // 失败，因为禁用了隐式初始化，必须显式构造
+        Test t2(name); // 直接初始化
+        // Test t_ = name; // 失败，因为不能将explicit构造函数用于拷贝形式的初始化过程
         Test t_ = static_cast<Test>(name); // 这里用static_cast显式转换成了Test对象
         add_obj(2, 3); // 这里编译器将2， 3 隐式转换成了Test临时对象 这种显然会造成困扰
     }
