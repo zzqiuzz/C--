@@ -65,13 +65,14 @@ class Test{
         static constexpr int v = 1; 
         friend Test add_obj(const Test&, const Test&); // 友元函数可以访问类的私有成员
         Test() = default;
+        Test(int *num, string name) : Test(*num, name){}; // 委托构造函数
         Test(int num, string name) : number(num){
             this->name = name; // this是一个const指针，用于指向具体的实例对象，不能在静态成员函数中使用，因为静态成员函数不绑定任何实例对象
         };
         Test(int num) : number(num){}; // 接受单个参数的构造函数，编译器可以执行隐式转换
         explicit Test(string n) : name(n){}; // 禁用隐式转换，必须显式构造, 只对一个实参的构造函数有效 多个参数的构造函数不能用隐式转换
         ~Test(){};
-        Test& add_(Test &t);
+
         string print_name() const { // 常成员函数, 只能由常对象/常指针/引用来调用 这里的const是修改隐式this指针的类型
             cout << "const " ;
             return name;
@@ -83,6 +84,7 @@ class Test{
             cout << "number is " << this->number << endl;
         } 
         static int get_hh(); // 只能访问静态成员变量，因为没有this指针，所以不能访问其它成员变量
+        Test& add_(Test &t);
         Test& add(int);
 };
 
