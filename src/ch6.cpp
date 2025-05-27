@@ -34,11 +34,13 @@ int (&getArray())[5] { // 返回一个包含 5 个元素的数组的引用
 
 int main()
 {
-    {
+    { 
         int i = 42;
+        int &ref = i; // 提供给普通T&的初始值必须是T类型的左值(有地址，可移动)
         const int *cp = &i;
         const int &r = i;
-        const int &r2 = 42;
+        // 合法 const T&的初始值不一定非得是左值，甚至可以不是T类型的
+        const int &r2 = 42.; // 这里可以理解为 int tmp = int{42.}; const int &r2 = tmp;
         // int *p = cp; // p是int型指针，而cp是const int*，类型不匹配
         // int &r3 = r; // r是常引用，r3是普通int引用，类型不匹配，如果合法，则r3能修改r的值，与r矛盾
         // int &r4 = 42; // 如果合法，则r4可以修改42的值，但是42是个字面值常量

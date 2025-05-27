@@ -164,8 +164,9 @@ int main(){
         Test t1 = {23, "zz"};
         Test tt = t;
         string name = "nihao";
-        Test t2(name); // 直接初始化
+        Test t2(name); // 直接初始化也叫显式初始化
         // Test t_ = name; // 失败，因为不能将explicit构造函数用于拷贝形式的初始化过程
+
         Test t_ = static_cast<Test>(name); // 这里用static_cast显式转换成了Test对象
         add_obj(2, 3); // 这里编译器将2， 3 隐式转换成了Test临时对象 这种显然会造成困扰
     }

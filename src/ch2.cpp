@@ -12,7 +12,7 @@
 #include <string.h>
 using std::cout;
 using std::endl;
-std::string outer_str; // 未显式初始化，函数外定义则默认初始化为空串
+std::string outer_str; // 未显式初始化，函数外定义则默认初始化为空串 如果是局部变量，则状态未知
 int outer_varibale; // 未显式初始化，函数外定义则默认初始化为0
 int block_scope_var = 2;
 
@@ -65,11 +65,16 @@ FuncPtr get_function(int op) {
 // argc 表示命令行参数的数量，argv是一个指向字符数组的指针数组，每个元素指向一个命令行参数字符串
 int main(int argc, char *argv[]){
     // argc argv
-    cout << "number of args is: " << argc << endl;
-    for(int i = 0; i < argc; i++){
+    cout << "number of args is: " << argc << endl; 
+    for(int i = 0; i < argc; i++)
         cout << "argv[" << i << "] = " << argv[i] << endl;
-    }
+    
 
+    {
+        // 因为指针的本质是一个内存地址，地址的长度取决于系统架构和编译器
+        cout << "number of bytes of different type of pointers" << endl;
+        cout << sizeof(char*) << " " << sizeof(int*) << " " << sizeof(double*) << " " << sizeof(float*)<< " "  << endl; //8 8 8 8 根据操作系统
+    }
     {
         int xy = 42;
         int hello_world = 100; 
