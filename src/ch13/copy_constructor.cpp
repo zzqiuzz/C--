@@ -63,7 +63,7 @@ class MyClass{
         vector<int> data;
         int *p = new int;
         int num;
-        static MyClass default_class; // 合法，因为此时MyClass是正在定义的类类型，所以可以声明，但是不能定义！
+        static MyClass default_class; // 合法，因为此时MyClass是正在定义的类类型，所以这里是声明，但是不能定义！
         // static MyClass default_class = {5};  // 错误 不能定义
         MyClass() = default; // 只能对编译器自己合成版本的成员函数使用=default
         MyClass(vector<int> d): data(d){};  // 默认情况下，单参数的构造函数都应该声明为explicit， 只能用于直接初始化

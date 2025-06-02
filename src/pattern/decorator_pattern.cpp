@@ -7,12 +7,13 @@ using namespace std;
 
 class Beverage{
     public:
-        virtual ~Beverage(){};
-        virtual string getDescription() const = 0;
+        virtual ~Beverage(){}; // 防止内存泄漏
+        // 纯寻函数，抽象基类，不能实例化一个对象，子类必须实现该函数，否则子类也变成抽象类
+        virtual string getDescription() const = 0; 
         virtual double cost() const = 0;
 };
 
-class Coffe : public Beverage{
+class Coffe final : public Beverage{ // final表明Coffe这个类不能被继承，继承终止
     public:
         string getDescription() const override{
             return "coffe.";
@@ -38,7 +39,7 @@ class Decorator : public Beverage{
     public:
         Decorator(Beverage* b) : beverage(b){}
         ~Decorator(){
-            cout << "hhhhhhh" << endl;
+            cout << "releasing decorator." << endl;
             delete beverage;
         }
         string getDescription() const override{
@@ -85,7 +86,7 @@ int main(){
     // delete coffe;
     // delete b_coffe;
  
-    Beverage* coffe = new Coffe();
+    Beverage* coffe = new Coffe(); // coffe 是抽象基类，指向的是Coffe中基类的部分，动态绑定为Coffe类型
     cout << coffe->getDescription() << endl;
     Beverage* milk_coffe = new Milk(coffe);
     cout << "Description: " << milk_coffe->getDescription() << endl;
