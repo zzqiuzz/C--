@@ -10,8 +10,9 @@ int main(){
             // 任何具有明确定义的转换，只要不能包含底层const,都可以使用
             // 主要用于基本数据类型的转换，以及具有继承关系的类对象之间的转换
             int a = 2, b = 3, *const p = &a, *pp = &b; 
-
-            float c = static_cast<float>(*pp); //算数类型倒是可以转
+            uint32_t a_int32 = 9;
+            float c = static_cast<float>(*pp); // 整数还都能转浮点
+            double dd = static_cast<double>(a_int32);
             //算数类型指针看来都不能用static_cast转，可以通过void*中转或者用reinterpret_cast
             // char *cp = static_cast<char*>(a); error 
             // double *c = static_cast<double*>(pp);//error 不能将int* 转换成double* 
